@@ -1,0 +1,38 @@
+nav {
+    height: 7vh;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 5%;
+    box-sizing: border-box;
+}
+
+ul,
+body,
+h1,
+p {
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+}
+
+.note {
+    width: 20em;
+    border: 1px solid lightgray;
+    border-radius: 1em;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.note-list {
+    padding: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
