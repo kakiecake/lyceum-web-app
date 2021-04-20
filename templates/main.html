@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="/styles.css" />
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li>Меню</li>
-            </ul>
-        </nav>
-        {% block content %}
-        {% endblock %}
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Меню</h1>
+    <a class="btn btn-primary " href="/notes">Заметки</a>
+    <a class="btn btn-primary " href="/clicker">Мини-игра "Кликер"</a>
+    <a class="btn btn-primary " href="/shop">Магазин</a>
+{% endblock %}

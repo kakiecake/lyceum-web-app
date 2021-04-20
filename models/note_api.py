@@ -17,7 +17,7 @@ def get_notes():
     return jsonify(
         {
             'notes':
-                [item.to_dict(only=('name', 'text', 'author_id', 'created_at'))
+                [item.to_dict(only=('id', 'name', 'text', 'author_id', 'created_at'))
                  for item in note]
         }
     )
