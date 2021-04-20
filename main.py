@@ -72,7 +72,6 @@ def login():
 @app.route('/notes')
 def notes():
     note = requests.get('http://localhost:5000/api/note').json()
-    print(note)
     return render_template("notes.html", notes=note['notes'])
 
 
