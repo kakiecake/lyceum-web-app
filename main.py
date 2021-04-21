@@ -1,10 +1,12 @@
 import requests
-from flask import Flask, render_template, redirect, make_response, jsonify, request
+from flask import Flask, render_template, redirect, make_response, jsonify, \
+    request
 from werkzeug.exceptions import abort
-from models import db_session, note_api
+from models import db_session, note_api, message_api
 from forms.register import RegisterForm
 from forms.login import LoginForm
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, \
+    logout_user, current_user
 from models.user import User
 from forms.note import NoteForm
 
@@ -27,7 +29,8 @@ def index():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if form.validate_on_submit() and form.password.data == form.password_again.data:
+    if form.validate_on_submit() and form.password.data == \
+            form.password_again.data:
         user = User()
         user.surname = form.surname.data
         user.name = form.name.data
@@ -59,7 +62,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        user = db_sess.query(User).filter(
+            User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             return redirect("/")
@@ -86,7 +90,8 @@ def add_notes():
                             'author_id': current_user.id,
                             'is_private': form.is_private.data}).json()
         return redirect("/notes")
-    return render_template('add_notes.html', form=form, title='Создание заметки')
+    return render_template('add_notes.html', form=form,
+                           title='Создание заметки')
 
 
 @app.route('/notes/<int:id>', methods=['GET', 'POST'])
@@ -123,7 +128,14 @@ def del_notes(id):
     return redirect('/notes')
 
 
+@app.route('/message', methods=['GET', 'POST'])
+@login_required
+def message():
+    pass
+
+
 if __name__ == '__main__':
     db_session.global_init("db/db.sqlite")
     app.register_blueprint(note_api.blueprint)
+    app.register_blueprint(message_api.blueprint)
     app.run()
