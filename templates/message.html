@@ -8,12 +8,12 @@
     <h1>Входящие сообщения</h1>
     {% for message in messages1 %}
     <div class="border border-primary">
-        <h1>{{ message.note_id }}</h1>
+        <h1><a href="/note/{{ message.note_id }}">{{ message.note_id }}</a></h1>
         <h2>{{ message.message_text }}</h2><br>
         {% if message.is_anonymous == 1 %}
         <p>Анонимное сообщение, Дата написания - {{ message.created_at }}</p>
         {% else %}
-        <p>Айди отправителя - {{ message.sender_id }}, Дата написания - {{ message.created_at }}</p>
+        <p>Айди отправителя - <a href="/profile/{{ message.sender_id }}">{{ message.sender_id }}</a>, Дата написания - {{ message.created_at }}</p>
         {% endif %}
         {% if current_user.is_authenticated %}
     <div>
@@ -27,9 +27,9 @@
     <h1>Исходящие сообщения</h1>
     {% for message in messages2 %}
     <div class="border border-primary">
-        <h1>{{ message.note_id }}</h1>
+        <h1><a href="/note/{{ message.note_id }}">{{ message.note_id }}</a></h1>
         <h2>{{ message.message_text }}</h2><br>
-        <p>Айди получателя - {{ message.recipient_id }}, Дата написания - {{ message.created_at }}</p>
+        <p>Айди получателя - <a href="/profile/{{ message.recipient_id }}">{{ message.recipient_id }}</a>, Дата написания - {{ message.created_at }}</p>
         {% if current_user.is_authenticated and current_user.id == message.sender_id %}
     <div>
         <a href="/messages/{{ message.id }}" class="btn btn-warning">

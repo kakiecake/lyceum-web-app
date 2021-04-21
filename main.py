@@ -191,6 +191,27 @@ def del_messages(id):
     return redirect('/messages')
 
 
+@app.route('/profile/<int:id>')
+@login_required
+def profile(id):
+    db_sess = db_session.create_session()
+    prof = db_sess.query(User).get(id)
+    return render_template('profile.html', surname=prof.surname,
+                           name=prof.name, id=prof.id, age=prof.age,
+                           email=prof.email, created_at=prof.created_at
+                           )
+
+
+@app.route('/note/<int:id>')
+@login_required
+def note(id):
+    one_note = \
+        requests.get(f'http://localhost:5000/api/note/{id}').json()['notes']
+    return render_template("note.html", author_id=one_note['author_id'],
+                           created_at=one_note['created_at'],
+                           name=one_note['name'], text=one_note['text'])
+
+
 if __name__ == '__main__':
     db_session.global_init("db/db.sqlite")
     app.register_blueprint(note_api.blueprint)

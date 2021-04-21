@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if current_user.is_authenticated %}
+    <h1>{{ surname }} {{ name }}</h1>
+    <h2>Айди пользователя - {{ id }}</h2>
+    <h2>Возраст - {{ age }}</h2>
+    <h2>Почта - {{ email }}</h2>
+    <p>Дата создания аккаунта - {{ created_at }}</p>
+    {% else %}
+    <h1>Данная информация доступна только для авторизированных пользователей</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="border border-primary">
+        <h1>{{ name }}</h1>
+        <h2>{{ text }}</h2><br>
+        <p>Айди автора - <a href="/profile/{{ author_id }}">{{ author_id }}</a>, Дата написания - {{ created_at }}</p>
+    </div>
+{% endblock %}

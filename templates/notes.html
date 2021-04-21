@@ -9,7 +9,7 @@
     <div class="border border-primary">
         <h1>{{ note.name }}</h1>
         <h2>{{ note.text }}</h2><br>
-        <p>Айди автора - {{ note.author_id }}, Дата написания - {{ note.created_at }}</p>
+        <p>Айди автора - <a href="/profile/{{ note.author_id }}">{{ note.author_id }}</a>, Дата написания - {{ note.created_at }}</p>
         {% if current_user.is_authenticated and current_user.id == note.author_id %}
     <div>
         <a href="/notes/{{ note.id }}" class="btn btn-warning">
