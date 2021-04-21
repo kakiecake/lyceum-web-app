@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.recipient_id.label }}<br>
+        {{ form.recipient_id(class="form-control") }}<br>
+        {% for error in form.recipient_id.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.note_id.label }}<br>
+        {{ form.note_id(class="form-control") }}<br>
+        {% for error in form.note_id.errors %}
+            <p content="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.message_text.label }}<br>
+        {{ form.message_text(class="form-control") }}<br>
+        {% for error in form.message_text.errors %}
+            <p content="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>{{ form.is_anonymous() }} {{ form.is_anonymous.label }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    {{message}}
+</form>
+{% endblock %}

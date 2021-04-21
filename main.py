@@ -9,6 +9,7 @@ from flask_login import LoginManager, login_user, login_required, \
     logout_user, current_user
 from models.user import User
 from forms.note import NoteForm
+from forms.message import MessageForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -128,10 +129,66 @@ def del_notes(id):
     return redirect('/notes')
 
 
-@app.route('/message', methods=['GET', 'POST'])
+@app.route('/messages', methods=['GET', 'POST'])
 @login_required
-def message():
-    pass
+def messages():
+    message = requests.get(
+        f'http://localhost:5000/api/message/{current_user.id}').json()
+    return render_template("message.html", messages1=message['messages1'],
+                           messages2=message['messages2'])
+
+
+@app.route('/messages/add', methods=['GET', 'POST'])
+@login_required
+def add_messages():
+    form = MessageForm()
+    if form.validate_on_submit():
+        requests.post('http://localhost:5000/api/message',
+                      json={'recipient_id': form.recipient_id.data,
+                            'sender_id': current_user.id,
+                            'note_id': form.note_id.data,
+                            'message_text': form.message_text.data,
+                            'is_anonymous': form.is_anonymous.data}).json()
+        return redirect("/messages")
+    return render_template('add_message.html', form=form,
+                           title='Создание сообщения')
+
+
+@app.route('/messages/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_messages(id):
+    form = MessageForm()
+    if request.method == "GET":
+        message = requests.get(
+            f'http://localhost:5000/api/one_message/{id}').json()
+        if message.get('error') is None:
+            message = message['message']
+            form.recipient_id.data = message['recipient_id']
+            form.note_id.data = message['note_id']
+            form.message_text.data = message['message_text']
+            form.is_anonymous.data = message['is_anonymous']
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        requests.put(f'http://localhost:5000/api/message/{id}',
+                     json={'recipient_id': form.recipient_id.data,
+                           'note_id': form.note_id.data,
+                           'message_text': form.message_text.data,
+                           'is_anonymous': form.is_anonymous.data}).json()
+        return redirect('/messages')
+    return render_template('add_message.html',
+                           form=form,
+                           title='Редактор сообщения'
+                           )
+
+
+@app.route('/messages/del/<int:id>', methods=['GET', 'POST'])
+@login_required
+def del_messages(id):
+    message = requests.delete(f'http://localhost:5000/api/message/{id}').json()
+    if message.get('error'):
+        abort(404)
+    return redirect('/messages')
 
 
 if __name__ == '__main__':

@@ -13,14 +13,21 @@ blueprint = flask.Blueprint(
 @blueprint.route('/api/message/<int:id>', methods=['GET'])
 def get_messages(id):
     db_sess = db_session.create_session()
-    message = db_sess.query(Message).filter(Message.recipient_id == id)
+    message1 = db_sess.query(Message).filter(Message.recipient_id == id)
+    message2 = db_sess.query(Message).filter(Message.sender_id == id)
     return jsonify(
         {
-            'messages':
-                [item.to_dict(only=('id', 'sender_id', 'note_id',
-                                    'message_text', 'is_anonymous',
+            'messages1':
+                [item.to_dict(only=('id', 'recipient_id', 'sender_id',
+                                    'note_id', 'message_text', 'is_anonymous',
                                     'created_at'))
-                 for item in message]
+                 for item in message1],
+            'messages2':
+                [item.to_dict(only=('id', 'recipient_id', 'sender_id',
+                                    'note_id', 'message_text',
+                                    'is_anonymous',
+                                    'created_at'))
+                 for item in message2]
         }
     )
 

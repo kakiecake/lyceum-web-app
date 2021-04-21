@@ -1,38 +1,46 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% block content %}
-<h1>{{ title }}</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.recipient_id.label }}<br>
-        {{ form.recipient_id(class="form-control") }}<br>
-        {% for error in form.recipient_id.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.note_id.label }}<br>
-        {{ form.note_id(class="form-control") }}<br>
-        {% for error in form.note_id.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.message_text.label }}<br>
-        {{ form.message_text(class="form-control") }}<br>
-        {% for error in form.message_text.errors %}
-            <p content="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>{{ form.is_anonymous() }} {{ form.is_anonymous.label }}</p>
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    {{message}}
-</form>
+{% if current_user.is_authenticated %}
+    <a href="/messages/add" class="btn btn-secondary">Написать сообщение</a>
+{% endif %}
+<a href="/" class="btn btn-secondary">Обратно в меню</a>
+<div class="border border-dark">
+    <h1>Входящие сообщения</h1>
+    {% for message in messages1 %}
+    <div class="border border-primary">
+        <h1>{{ message.note_id }}</h1>
+        <h2>{{ message.message_text }}</h2><br>
+        {% if message.is_anonymous == 1 %}
+        <p>Анонимное сообщение, Дата написания - {{ message.created_at }}</p>
+        {% else %}
+        <p>Айди отправителя - {{ message.sender_id }}, Дата написания - {{ message.created_at }}</p>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+    <div>
+        <a href="/messages/del/{{ message.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <h1>Исходящие сообщения</h1>
+    {% for message in messages2 %}
+    <div class="border border-primary">
+        <h1>{{ message.note_id }}</h1>
+        <h2>{{ message.message_text }}</h2><br>
+        <p>Айди получателя - {{ message.recipient_id }}, Дата написания - {{ message.created_at }}</p>
+        {% if current_user.is_authenticated and current_user.id == message.sender_id %}
+    <div>
+        <a href="/messages/{{ message.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/messages/del/{{ message.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
