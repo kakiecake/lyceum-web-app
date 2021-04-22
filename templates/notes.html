@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if current_user.is_authenticated %}
+    <a href="/notes/add" class="btn btn-secondary">Создать заметку</a>
+{% endif %}
+<a href="/" class="btn btn-secondary">Обратно в меню</a>
+<div class="border border-dark">
+    {% for note in notes %}
+    <div class="border border-primary">
+        <h1>{{ note.name }}</h1>
+        <h2>{{ note.text }}</h2><br>
+        <p>Айди автора - <a href="/profile/{{ note.author_id }}">{{ note.author_id }}</a>, Дата написания - {{ note.created_at }}</p>
+        {% if current_user.is_authenticated and current_user.id == note.author_id %}
+    <div>
+        <a href="/notes/{{ note.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/notes/del/{{ note.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
